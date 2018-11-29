@@ -4,4 +4,4 @@
 lib/
 target/
 src/main/resources/META-INF/.LCKpersistence.xml~
-
+.factorypath
