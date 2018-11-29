@@ -20,73 +20,6 @@ import com.coresystems.services.PaymentService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-<<<<<<< HEAD
-
-@WebServlet("/PaymentServlet")
-public class PaymentServlet extends HttpServlet {
-	   
-    
-	private static final long serialVersionUID = 3L;
-	private static Logger logger = Logger.getLogger(PaymentServlet.class.getName());
-        
-	private static EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("store");
-	EntityManager manager = emFactory.createEntityManager();
-	private PaymentService service = new PaymentService(manager);
-	
-    public PaymentServlet() {
-
-    }
-
-	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		
-		response.setContentType("application/json");
-        
-        
-        PrintWriter out = response.getWriter();
-        Gson json = new Gson();
-           
-         try {
-            out.print(json.toJson( service.getAllOrders() ));
-            System.out.println(service.getAllOrders());
-        } catch (Exception exception) {
-          
-        	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        	response.getWriter().println("{\"msg\":\"System Error\"}");
-        	logger.info(exception.getMessage());
-	}
-		
-		
-	}
-
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		response.setContentType("appication/json");
-		
-		PrintWriter out = response.getWriter();
-		Gson json = new Gson();
-		JsonObject jsonObject = json.fromJson(request.getReader(), JsonObject.class);
-		
-		try {
-			
-//			Integer id = jsonObject.get("id").getAsInt();
-			Integer customer_id = jsonObject.get("customer_id").getAsInt();
-			Integer amount = jsonObject.get("amount").getAsInt();
-			
-			
-			
-			Payments payment = new Payments();
-			
-			payment.setCustomerId(new Customers(customer_id));
-			payment.setAmount(amount);
-			
-			
-			if (service.addPayment(payment)) {
-				out.println(" { \"msg\" : \"added payment\" } ");
-				
-=======
 @WebServlet("/PaymentServlet")
 public class PaymentServlet extends HttpServlet {
 
@@ -144,35 +77,17 @@ public class PaymentServlet extends HttpServlet {
 			if (service.addPayment(payment)) {
 				out.println(" { \"msg\" : \"added payment\" } ");
 
->>>>>>> payments
 			} else {
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				out.println(" { \"msg\" : \"failed to add payment\" } ");
 			}
-<<<<<<< HEAD
-			
-=======
 
->>>>>>> payments
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			e.printStackTrace();
 			out.println("{\"msg\" : \"System Error Try Again\"}");
 			logger.warn(e.getMessage());
 		}
-<<<<<<< HEAD
-		
-	}
-
-
-	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-	}
-
-	
-	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-=======
 
 	}
 
@@ -186,14 +101,14 @@ public class PaymentServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.setContentType("application/json");
-		
+
 		PrintWriter out = response.getWriter();
 		// use when receiving json data
 //		Gson json = new Gson();
 //		json.fromJson(request.getReader(), JsonObject.class);
-		
+
 		Integer id = Integer.parseInt(request.getParameter("id"));
-		
+
 		try {
 			if (id != null) {
 				service.delete(id);
@@ -202,15 +117,12 @@ public class PaymentServlet extends HttpServlet {
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				out.println(" {\"msg\" : \"failed to detele no such order\"} ");
 			}
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			out.println(" {\"msg\" : \"System Error\"} ");
 			logger.info(e.getMessage());
 		}
-		
-		
->>>>>>> payments
+
 	}
 
 }
