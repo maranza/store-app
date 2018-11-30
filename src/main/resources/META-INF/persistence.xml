@@ -4,6 +4,7 @@
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
     <class>com.coresystems.models.Payments</class>
     <class>com.coresystems.models.Customers</class>
+    <class>com.coresystems.models.Products</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL82Dialect"/>
