@@ -93,7 +93,7 @@ public class Hello extends HttpServlet {
 			customer.setUsername(username);
 
 			// if requestType is update then modify the specific record
-			if (Integer.toString(jsonObject.get("id").getAsInt()) != null) {
+			if (Integer.toString(jsonObject.get("id").getAsInt()).isEmpty()) {
 
 				Integer id = (Integer) jsonObject.get("id").getAsInt();
 				customer.setId(id);
