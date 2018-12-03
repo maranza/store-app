@@ -90,4 +90,25 @@ WITH (
 )
 ;
 
+-- ====================================================================
+-- Table: public.products
+
+-- DROP TABLE public.products;
+
+CREATE TABLE public.products
+(
+  product_id integer NOT NULL DEFAULT nextval('customers_id_seq'::regclass),
+  product_name character varying(100) NOT NULL,
+  amount double precision,
+  CONSTRAINT products_pkey PRIMARY KEY (product_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.products
+  OWNER TO postgres;
+
+
+
+
 -- ==================================================================
