@@ -49,20 +49,19 @@ public class Hello extends HttpServlet {
 
 		String id = request.getParameter("id");
 
-//		try {
-
-//			if (id != null) {
-//				out.print(json.toJson(service.getOne(Integer.parseInt(id))));
-//			} else {
+		try {
+			if (id != null) {
+				out.print(json.toJson(service.getOne(Integer.parseInt(id))));
+			} else {
 				out.print(json.toJson(service.getAll()));
-//			}
+			}
 
-//		} catch (Exception exception) {
-//
-//			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-//			response.getWriter().println("{ \"msg\" : \" " + exception.getMessage() + " \" }");
-//			logger.info(exception.getMessage());
-//		}
+		} catch (Exception exception) {
+
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getWriter().println("{ \"msg\" : \" " + exception.getMessage() + " \" }");
+			logger.info(exception.getMessage());
+		}
 	}
 
 	@Override
