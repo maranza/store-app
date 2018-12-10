@@ -45,6 +45,7 @@ public class PaymentServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		response.setContentType("application/json");
+		reEstablishConnection();
 
 		PrintWriter out = response.getWriter();
 		Gson json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
@@ -72,6 +73,7 @@ public class PaymentServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		response.setContentType("appication/json");
+		reEstablishConnection();
 
 		PrintWriter out = response.getWriter();
 		Gson json = new Gson();
@@ -125,6 +127,7 @@ public class PaymentServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.setContentType("application/json");
+		reEstablishConnection();
 
 		PrintWriter out = response.getWriter();
 		// use when receiving json data
