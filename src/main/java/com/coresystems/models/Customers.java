@@ -47,16 +47,22 @@ public class Customers implements Serializable {
     @Column(name = "id")
     @Expose(serialize = false)
     private Integer id;
+    
+    @Expose
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 50)
     @Column(name = "name")
     private String name;
+    
+    @Expose
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 50)
     @Column(name = "address")
     private String address;
+    
+    @Expose
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 50)

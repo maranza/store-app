@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -57,11 +58,13 @@ public class Payments implements Serializable {
     @Column(name = "amount")
     private int amount;
     
+    @Expose
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Customers customer;
     
-    @ManyToMany
+    @Expose
+    @ManyToMany(cascade = CascadeType.ALL)
     private Collection<Products> p = new ArrayList<>();
 
     public Collection<Products> getP() {

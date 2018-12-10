@@ -48,7 +48,7 @@ public class PaymentServlet extends HttpServlet {
 		reEstablishConnection();
 
 		PrintWriter out = response.getWriter();
-		Gson json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		Gson json = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().create();
 		
 		String id = request.getParameter("id");
 
