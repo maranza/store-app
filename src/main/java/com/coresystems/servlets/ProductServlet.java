@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import com.coresystems.models.Products;
 import com.coresystems.services.ProductService;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 
@@ -51,15 +52,17 @@ public class ProductServlet extends HttpServlet {
 		
 
 		PrintWriter out = response.getWriter();
-		Gson json = new Gson();
+		Gson json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		
 		String id = request.getParameter("id");
 		
 		try {
 			if (id != null) {
 				out.print(json.toJson(service.findProductbyID(Integer.parseInt(id))));
+//				System.out.println("print");
 			} else {
 				out.print(json.toJson(service.getAllProducts()));
+//				System.out.println("print");
 			}
 			
 		} catch (Exception e) {

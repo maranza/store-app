@@ -7,6 +7,10 @@
 package com.coresystems.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,12 +18,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import com.google.gson.annotations.Expose;
 
 /**
  *
@@ -37,12 +44,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Payments implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    
     @Basic(optional = false)
+    @Expose
     @NotNull
     @Column(name = "amount")
     private int amount;
@@ -50,8 +60,19 @@ public class Payments implements Serializable {
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Customers customer;
+    
+    @ManyToMany
+    private Collection<Products> p = new ArrayList<>();
 
-    public Payments()
+    public Collection<Products> getP() {
+		return p;
+	}
+
+	public void setP(Collection<Products> p) {
+		this.p = p;
+	}
+
+	public Payments()
     {
     }
 

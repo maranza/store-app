@@ -7,17 +7,23 @@
 package com.coresystems.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.google.gson.annotations.Expose;
 
 /**
  *
@@ -39,16 +45,22 @@ public class Products implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
     private Integer productId;
+    @Expose
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
     @Column(name = "product_name")
     private String productName;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Expose
     @Column(name = "amount")
     private Double amount;
 
-    public Products()
+    @ManyToMany(mappedBy = "p")
+    private List<Payments> payments = new ArrayList<>();
+    
+
+	public Products()
     {
     }
 
