@@ -55,6 +55,7 @@ public class PaymentService {
 
 		} catch (Exception e) {
 			tx.rollback();
+			e.printStackTrace();
 			return false;
 		} finally {
 			tx = null;
@@ -109,6 +110,7 @@ public class PaymentService {
 			tx.commit();
 		} catch (Exception e) {
 			tx.rollback();
+			e.printStackTrace();
 			return false;
 		} finally {
 			tx = null;
