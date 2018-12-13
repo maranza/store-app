@@ -8,7 +8,6 @@ package com.coresystems.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.Basic;
@@ -64,14 +63,14 @@ public class Payments implements Serializable {
     private Customers customer;
     
     @Expose
-    @ManyToMany(cascade = CascadeType.ALL)
-    private Collection<Products> p = new ArrayList<>();
+    @ManyToMany
+    private List<Products> p = new ArrayList<>();
 
-    public Collection<Products> getP() {
+    public List<Products> getP() {
 		return p;
 	}
 
-	public void setP(Collection<Products> p) {
+	public void setP(List<Products> p) {
 		this.p = p;
 	}
 

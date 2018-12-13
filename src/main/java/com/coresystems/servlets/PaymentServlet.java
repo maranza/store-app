@@ -23,6 +23,7 @@ import com.coresystems.services.PaymentService;
 import com.coresystems.services.ProductService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 @WebServlet("/PaymentServlet")
@@ -57,7 +58,7 @@ public class PaymentServlet extends HttpServlet {
 			if (id != null) {
 					out.print(json.toJson(service.findOrderById(Integer.parseInt(id))));
 			} else {
-				out.print(json.toJson(service.getAllOrders()));
+				out.print(json.toJson(service.getAllOrders()).concat("total: "));
 			}
 		} catch (Exception exception) {
 
@@ -76,24 +77,33 @@ public class PaymentServlet extends HttpServlet {
 		reEstablishConnection();
 
 		PrintWriter out = response.getWriter();
-		Gson json = new Gson();
+		Gson json = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().create();
 		JsonObject jsonObject = json.fromJson(request.getReader(), JsonObject.class);
 		
-
+//		product_id.forEach( id ->  {
+//		payment.getP().add(new Products((Integer)id.getAsInt()));
+//		System.out.println( (Integer)id.getAsInt() );
+//		});
+		
 		try {
 			
 			
 //			Integer id = jsonObject.get("id").getAsInt();
 			String strId = request.getParameter("id");
 			Integer customer_id = jsonObject.get("customer_id").getAsInt();
-			Integer product_id = jsonObject.get("product_id").getAsInt();
+			JsonArray product_id = jsonObject.get("product_id").getAsJsonArray();
 			Integer amount = jsonObject.get("amount").getAsInt();
-
+			
 			Payments payment = new Payments();
+			List<Products> p = new ArrayList<>();
 		
-			payment.setCustomerId(new Customers(customer_id));
-			payment.getP().add(new Products(product_id));
+			product_id.forEach( id ->  {
+				p.add( new Products((Integer)id.getAsInt()));
+			});
+			
+			payment.setCustomerId(new Customers(customer_id));			
 			payment.setAmount(amount);
+			payment.setP(p);
 
 			if(strId != null ){
 				service.updatePayment(Integer.parseInt(strId), payment);
@@ -131,7 +141,7 @@ public class PaymentServlet extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 		// use when receiving json data
-//		Gson json = new Gson();
+//		Gson json = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().create();
 //		json.fromJson(request.getReader(), JsonObject.class);
 
 		Integer id = Integer.parseInt(request.getParameter("id"));
