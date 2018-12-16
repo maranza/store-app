@@ -9,7 +9,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
 import com.coresystems.models.Products;
-import com.google.gson.JsonElement;
 
 /**
  * @author master
@@ -28,6 +27,7 @@ public class ProductService {
 		this.em = entityManager;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Products> getAllProducts() {
 		return (List<Products>) em.createNamedQuery("Products.findAll").getResultList();
 	}

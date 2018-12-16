@@ -14,6 +14,11 @@ public class CustomerService {
 	private EntityManager em;
 
 	public CustomerService(EntityManager entityManager) {
+		setEntityManager(entityManager);
+	}
+
+	public void setEntityManager(EntityManager entityManager) {
+
 		this.em = entityManager;
 	}
 

@@ -52,17 +52,15 @@ public class ProductServlet extends HttpServlet {
 		
 
 		PrintWriter out = response.getWriter();
-		Gson json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		Gson json = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().create();
 		
 		String id = request.getParameter("id");
 		
 		try {
 			if (id != null) {
 				out.print(json.toJson(service.findProductbyID(Integer.parseInt(id))));
-//				System.out.println("print");
 			} else {
 				out.print(json.toJson(service.getAllProducts()));
-//				System.out.println("print");
 			}
 			
 		} catch (Exception e) {
@@ -83,7 +81,7 @@ public class ProductServlet extends HttpServlet {
 		response.setContentType("application/json");
 		reEstablishConnection();
 		PrintWriter out = response.getWriter();
-		Gson json = new Gson();
+		Gson json = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().create();
 		JsonObject jsonObject = json.fromJson(request.getReader(), JsonObject.class);
 		
 		String product_name = jsonObject.get("product_name").getAsString();
@@ -124,8 +122,8 @@ public class ProductServlet extends HttpServlet {
 		response.setContentType("application/json");
 		reEstablishConnection();
 		PrintWriter out = response.getWriter();
-		Gson json = new Gson();
-		JsonObject jsonObject = json.fromJson(request.getReader(), JsonObject.class);
+//		Gson json = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().create();
+//		JsonObject jsonObject = json.fromJson(request.getReader(), JsonObject.class);
 		
 //		Integer id = (Integer)jsonObject.get("product_id").getAsInt();		
 		Integer id = Integer.parseInt(request.getParameter("id"));
@@ -155,7 +153,6 @@ public class ProductServlet extends HttpServlet {
 		
 	}
 
-	@SuppressWarnings("unused")
 	private void reEstablishConnection() {
 
 		if (!entityManager.isOpen()) {

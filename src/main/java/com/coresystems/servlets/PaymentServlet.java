@@ -20,7 +20,6 @@ import com.coresystems.models.Customers;
 import com.coresystems.models.Payments;
 import com.coresystems.models.Products;
 import com.coresystems.services.PaymentService;
-import com.coresystems.services.ProductService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -69,7 +68,6 @@ public class PaymentServlet extends HttpServlet {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
@@ -162,7 +160,6 @@ public class PaymentServlet extends HttpServlet {
 
 	}
 	
-	@SuppressWarnings("unused")
 	private void reEstablishConnection() {
 
 		if (!entityManager.isOpen()) {

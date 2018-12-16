@@ -1,4 +1,18 @@
-package com.coresystems.main;
+package com.coresystems.servlets;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
 
 import com.coresystems.models.Customers;
 import com.coresystems.services.CustomerService;
@@ -7,33 +21,20 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.log4j.Logger;
-
-@WebServlet("/hello")
-public class Hello extends HttpServlet {
+@WebServlet("/customers")
+public class CustomerServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -1500805539391979323L;
-	private static Logger logger = Logger.getLogger(Hello.class.getName());
+	private static Logger logger = Logger.getLogger(CustomerServlet.class.getName());
 
-	private static EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("store");
-	EntityManager manager = emFactory.createEntityManager();
-	private CustomerService service = new CustomerService(manager);
+	private EntityManagerFactory emFactory;
+	private EntityManager entityManager;
+	private CustomerService service;
 
-	@Override
-	public void init() {
-
+	public CustomerServlet() {
+		emFactory = Persistence.createEntityManagerFactory("store");
+		entityManager = emFactory.createEntityManager();
+		service = new CustomerService(entityManager);
 	}
 
 	@Override
@@ -41,6 +42,7 @@ public class Hello extends HttpServlet {
 			throws ServletException, IOException {
 
 		response.setContentType("application/json");
+		reEstablishConnection();
 
 		PrintWriter out = response.getWriter();
 		Gson json = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().create();
@@ -68,12 +70,12 @@ public class Hello extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-//		doGet(request, response);
 
 		response.setContentType("application/json");
+		reEstablishConnection();
 
 		PrintWriter out = response.getWriter();
-//            Gson json = new Gson();
+//            Gson json = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().create();
 
 		try {
 
@@ -140,9 +142,10 @@ public class Hello extends HttpServlet {
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		response.setContentType("application/json");
+		reEstablishConnection();
 		
 		PrintWriter out = response.getWriter();
-		Gson json = new Gson();
+		Gson json = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().create();
 		JsonObject jsonObject = json.fromJson(request.getReader(), JsonObject.class);
 		
 		Integer id = Integer.parseInt(request.getParameter("id"));
@@ -168,9 +171,14 @@ public class Hello extends HttpServlet {
 		
 	}
 	
-	
-	
-	
+	private void reEstablishConnection() {
+
+		if (!entityManager.isOpen()) {
+
+			entityManager = emFactory.createEntityManager();
+			service.setEntityManager(entityManager);
+		}
+	}
 	
 
 }

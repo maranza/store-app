@@ -6,9 +6,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
 import com.coresystems.models.Payments;
-import com.coresystems.models.Products;
-import com.google.gson.JsonElement;
-
 
 /**
  * @author master
@@ -22,9 +19,9 @@ public class PaymentService {
 	public PaymentService(EntityManager entityManager) {
 		setEntityManager(entityManager);
 	}
-	
+
 	public void setEntityManager(EntityManager entityManager) {
-		
+
 		this.em = entityManager;
 	}
 
@@ -33,6 +30,7 @@ public class PaymentService {
 	 *
 	 * @return List
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Payments> getAllOrders() {
 		return (List<Payments>) em.createNamedQuery("Payments.findAll").getResultList();
 	}
@@ -64,7 +62,7 @@ public class PaymentService {
 
 		return true;
 	}
-	
+
 	public boolean updatePayment(Integer paymentId, Payments payments) throws Exception {
 
 		EntityTransaction tx = em.getTransaction();
@@ -76,7 +74,7 @@ public class PaymentService {
 			p.setP(payments.getP());
 			tx.commit();
 		} catch (Exception e) {
-			if(tx != null && tx.isActive())
+			if (tx != null && tx.isActive())
 				tx.rollback();
 			e.printStackTrace();
 			return false;
@@ -122,13 +120,12 @@ public class PaymentService {
 	public Payments findOrderById(Integer id) throws Exception {
 		Payments p;
 		try {
-			p = (Payments)em.createNamedQuery("Payments.findById").setParameter("paymentsId", id).getSingleResult();
-		}catch(Exception e) {			
+			p = (Payments) em.createNamedQuery("Payments.findById").setParameter("paymentsId", id).getSingleResult();
+		} catch (Exception e) {
 			throw new Exception("record not found");
 		}
-		
+
 		return p;
 	}
-
 
 }
