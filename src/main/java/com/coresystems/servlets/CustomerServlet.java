@@ -14,8 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import com.coresystems.exceptions.NotFoundException;
 import com.coresystems.models.Customers;
 import com.coresystems.services.CustomerService;
+import com.coresystems.utils.ServletUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -54,16 +56,17 @@ public class CustomerServlet extends HttpServlet {
 
 		try {
 			if (id != null) {
-				out.print(json.toJson(service.getOne(Integer.parseInt(id))));
+				out.print(json.toJson(service.findCustomerById(Integer.parseInt(id))));
 			} else {
 				out.print(json.toJson(service.getAll()));
 			}
 
-		} catch (Exception exception) {
-
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			response.getWriter().println("{ \"msg\" : \" " + exception.getMessage() + " \" }");
-			logger.info(exception.getMessage());
+		} catch (NotFoundException exception) {
+			ServletUtil.sendError(exception.getMessage(), response, HttpServletResponse.SC_NOT_FOUND);
+		}catch (Exception e) {
+			ServletUtil.sendError("System error", response, HttpServletResponse.SC_BAD_REQUEST);
+			e.printStackTrace();
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -73,9 +76,6 @@ public class CustomerServlet extends HttpServlet {
 
 		response.setContentType("application/json");
 		reEstablishConnection();
-
-		PrintWriter out = response.getWriter();
-//            Gson json = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().create();
 
 		try {
 
@@ -101,36 +101,26 @@ public class CustomerServlet extends HttpServlet {
 				customer.setId(id);
 
 				if (service.update(id, customer)) {
-					out.println("{\"msg\":\"Updated\"}");
+					ServletUtil.sendResponse("record updated", response);
 
 				} else {
-					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-					out.println("{\"msg\":\"Failed to Update Record\"}");
-
+					ServletUtil.sendError("Failed to Update Record", response, HttpServletResponse.SC_BAD_REQUEST);
 				}
 
 			}
-//    			
 			else {
 				if (service.save(customer)) {
-					out.println("{\"msg\":\"Captured\"}");
-
+					ServletUtil.sendResponse("Captured", response);
 				} else {
-					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-					out.println("{\"msg\":\"Faisssled to Captusssre Recorddd\"}");
-//    					
+					ServletUtil.sendError("Failed to Capture Record", response, HttpServletResponse.SC_BAD_REQUEST);
 				}
 			}
 
 		} catch (JsonSyntaxException e) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			out.println("{\"msg\" : \"Failed to Parse Json\"}");
-
+			ServletUtil.sendError("Failed to Parse Json", response, HttpServletResponse.SC_BAD_REQUEST);
 		} catch (Exception e) {
-
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			ServletUtil.sendError("System Error Try Again", response, HttpServletResponse.SC_BAD_REQUEST);
 			e.printStackTrace();
-			out.println("{\"msg\" : \"System Error Try Again\"}");
 			logger.warn(e.getMessage());
 		}
 
@@ -155,16 +145,19 @@ public class CustomerServlet extends HttpServlet {
 			
 			if(id != null) {
 				service.delete(id);
-				out.println(" {\"msg\" : \"deleted\"} ");
+				ServletUtil.sendResponse("record deleted", response);
 			}else {
-				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				out.println(" {\"msg\" : \"failed to delete Parameter required\"} ");
+				ServletUtil.sendError("failed to delete Parameter required", response, HttpServletResponse.SC_BAD_REQUEST);
 			}
 			
-		}catch(Exception e)
+		}
+		catch(NotFoundException e) {
+			ServletUtil.sendError("record not found", response, HttpServletResponse.SC_NOT_FOUND);
+		}
+		catch(Exception e)
 		{
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			out.println("{\"msg\":\"System Error \"}");
+			ServletUtil.sendError("System Error", response, HttpServletResponse.SC_BAD_REQUEST);
+			e.printStackTrace();
 			logger.info(e.getMessage());
 		}
 		

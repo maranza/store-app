@@ -16,10 +16,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import com.coresystems.exceptions.NotFoundException;
 import com.coresystems.models.Customers;
 import com.coresystems.models.Payments;
 import com.coresystems.models.Products;
 import com.coresystems.services.PaymentService;
+import com.coresystems.utils.ServletUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -59,10 +61,12 @@ public class PaymentServlet extends HttpServlet {
 			} else {
 				out.print(json.toJson(service.getAllOrders()).concat("total: "));
 			}
-		} catch (Exception exception) {
-
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			response.getWriter().println("{\"msg\":\"System Error\"}");
+		} catch (NotFoundException e) {
+			ServletUtil.sendError(e.getMessage(), response, HttpServletResponse.SC_NOT_FOUND);
+		}
+		catch (Exception exception) {
+			ServletUtil.sendError("System Error", response, HttpServletResponse.SC_BAD_REQUEST);
+			exception.printStackTrace();
 			logger.info(exception.getMessage());
 		}
 
@@ -105,21 +109,21 @@ public class PaymentServlet extends HttpServlet {
 
 			if(strId != null ){
 				service.updatePayment(Integer.parseInt(strId), payment);
-				out.print(" {\"msg\" : \"record updated\"} ");
+				ServletUtil.sendResponse("record updated", response);
 			}else {
 				if (service.addPayment(payment)) {
-					out.println(" { \"msg\" : \"added payment\" } ");
-
+					ServletUtil.sendResponse("added payment", response);
 				} else {
-					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-					out.println(" { \"msg\" : \"failed to add payment\" } ");
+					ServletUtil.sendError("failed to add payment", response, HttpServletResponse.SC_BAD_REQUEST);
 				}
 			}
 
-		} catch (Exception e) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		}catch(NotFoundException e) {
+			ServletUtil.sendError(e.getMessage(), response, HttpServletResponse.SC_NOT_FOUND);
+		}
+		catch (Exception e) {
+			ServletUtil.sendError("System Error Try Again", response, HttpServletResponse.SC_BAD_REQUEST);
 			e.printStackTrace();
-			out.println("{\"msg\" : \"System Error Try Again\"}");
 			logger.warn(e.getMessage());
 		}
 
@@ -147,14 +151,14 @@ public class PaymentServlet extends HttpServlet {
 		try {
 			if (id != null) {
 				service.delete(id);
-				out.println(" {\"msg\" : \"deleted\"} ");
-			} else {
-				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				out.println(" {\"msg\" : \"failed to detele no such order\"} ");
+				ServletUtil.sendResponse("record deleted", response);
 			}
-		} catch (Exception e) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			out.println(" {\"msg\" : \"System Error\"} ");
+		}catch (NotFoundException e) {
+			ServletUtil.sendError(e.getMessage(), response, HttpServletResponse.SC_NOT_FOUND);
+		}
+		catch (Exception e) {
+			ServletUtil.sendError("System Error Try Again", response, HttpServletResponse.SC_BAD_REQUEST);
+			e.printStackTrace();
 			logger.info(e.getMessage());
 		}
 

@@ -14,8 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import com.coresystems.exceptions.NotFoundException;
 import com.coresystems.models.Products;
 import com.coresystems.services.ProductService;
+import com.coresystems.utils.ServletUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -63,9 +65,11 @@ public class ProductServlet extends HttpServlet {
 				out.print(json.toJson(service.getAllProducts()));
 			}
 			
-		} catch (Exception e) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			out.print(" {\"msg\" : \"no records returned\"} ");
+		}catch (NotFoundException e) {
+			ServletUtil.sendError(e.getMessage(), response, HttpServletResponse.SC_NOT_FOUND);
+		}
+		catch (Exception e) {
+			ServletUtil.sendError("no records returned", response, HttpServletResponse.SC_BAD_REQUEST);
 			logger.info(e.getMessage());
 			e.printStackTrace();
 		}
@@ -95,19 +99,20 @@ public class ProductServlet extends HttpServlet {
 		
 		try {
 			 if(strId != null ){
-//				
 				 service.updateProduct(Integer.parseInt(strId), new Products(product_name, amount));
-				 out.print(" {\"msg\" : \"record updated\"} ");
+				 ServletUtil.sendResponse("record updated", response);
 			 }else {
 				 if(service.addProduct(p))
-					 out.print(" {\"msg\" : \"record added\"} ");
+					 ServletUtil.sendResponse("record added", response);
 				 else
-					 out.print(" {\"msg\" : \"record not added\"} ");
+					 ServletUtil.sendError("record not added", response, HttpServletResponse.SC_BAD_REQUEST);
 			 }
 			
-		} catch (Exception e) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			out.print(" {\"msg\" : \"something went wrong\"} ");
+		}catch (NotFoundException e) {
+			ServletUtil.sendError(e.getMessage(), response, HttpServletResponse.SC_NOT_FOUND);
+		}
+		catch (Exception e) {
+			ServletUtil.sendError("something went wrong", response, HttpServletResponse.SC_BAD_REQUEST);
 			logger.info(e.getMessage());
 			e.printStackTrace();
 		}
@@ -131,16 +136,16 @@ public class ProductServlet extends HttpServlet {
 		try {
 			 if(id != null){
 				 if(service.deleteProduct(id))
-					 out.print(" {\"msg\" : \"record deleted\"} ");
+					 ServletUtil.sendResponse("record deleted", response);
 				 else
-					 out.print(" {\"msg\" : \"Failed to delete record\"} ");
+					 ServletUtil.sendResponse("failed to delete record", response);
 			 }
-			 out.print(" {\"msg\" : \"record not found\"} ");
-			 
 			
-		} catch (Exception e) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			out.print(" {\"msg\" : \" " + e.getMessage() + " \" } ");
+		} catch (NotFoundException e) {
+			ServletUtil.sendError(e.getMessage(), response, HttpServletResponse.SC_NOT_FOUND);
+		}
+		catch (Exception e) {
+			ServletUtil.sendError("something went wrong", response, HttpServletResponse.SC_BAD_REQUEST);
 			logger.info(e.getMessage());
 			e.printStackTrace();
 		}

@@ -5,7 +5,9 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
+import com.coresystems.exceptions.NotFoundException;
 import com.coresystems.models.Payments;
+import com.coresystems.models.Products;
 
 /**
  * @author master
@@ -43,10 +45,9 @@ public class PaymentService {
 	 */
 	public boolean addPayment(Payments payment) {
 
-		EntityTransaction tx = null;
+		EntityTransaction tx = em.getTransaction();
 
 		try {
-			tx = em.getTransaction();
 			tx.begin();
 			em.persist(payment);
 			tx.commit();
@@ -94,20 +95,16 @@ public class PaymentService {
 	 * 
 	 */
 	public boolean delete(Integer id) throws Exception {
-		Payments p = (Payments) em.createNamedQuery("Payments.findById").setParameter("id", id).getSingleResult();
 
-		if (p == null)
-			throw new Exception("No record found");
-
-		EntityTransaction tx = null;
-
+		EntityTransaction tx = em.getTransaction();
+		Payments p = findOrderById(id);
 		try {
-			tx = em.getTransaction();
 			tx.begin();
 			em.remove(p);
 			tx.commit();
 		} catch (Exception e) {
-			tx.rollback();
+			if(tx != null && tx.isActive())
+				tx.rollback();
 			e.printStackTrace();
 			return false;
 		} finally {
@@ -122,7 +119,7 @@ public class PaymentService {
 		try {
 			p = (Payments) em.createNamedQuery("Payments.findById").setParameter("paymentsId", id).getSingleResult();
 		} catch (Exception e) {
-			throw new Exception("record not found");
+			throw new NotFoundException("record not found");
 		}
 
 		return p;

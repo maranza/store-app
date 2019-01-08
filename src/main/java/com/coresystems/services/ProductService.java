@@ -10,6 +10,8 @@ import javax.persistence.EntityTransaction;
 
 import com.coresystems.models.Products;
 
+import javassist.NotFoundException;
+
 /**
  * @author master
  *
@@ -33,8 +35,8 @@ public class ProductService {
 	}
 	
 	public boolean addProduct(Products products) {
-		EntityTransaction tx = null;
 		
+		EntityTransaction tx = null;
 		try {
 			tx = em.getTransaction();
 			tx.begin();
@@ -99,7 +101,7 @@ public class ProductService {
 		try {
 			p = (Products)em.createNamedQuery("Products.findByProductId").setParameter("productId", id).getSingleResult();
 		}catch(Exception e) {			
-			throw new Exception("record not found");
+			throw new NotFoundException("record not found");
 		}
 		
 		return p;

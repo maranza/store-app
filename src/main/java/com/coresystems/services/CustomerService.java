@@ -1,9 +1,12 @@
 package com.coresystems.services;
 
-import com.coresystems.models.Customers;
 import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+
+import com.coresystems.exceptions.NotFoundException;
+import com.coresystems.models.Customers;
 
 /**
  *
@@ -26,18 +29,6 @@ public class CustomerService {
 	@SuppressWarnings("unchecked")
 	public List<Customers> getAll() {
 		return (List<Customers>) em.createNamedQuery("Customers.findAll").getResultList();
-	}
-
-	// Get a Customer by Id
-	public Customers getOne(Integer id) throws Exception {
-		Customers customer = (Customers) em.createNamedQuery("Customers.findById").setParameter("id", id)
-				.getSingleResult();
-
-		if (customer == null) {
-			throw new Exception("No Records found with that Id");
-		}
-
-		return customer;
 	}
 
 	// Add a Customer
@@ -63,12 +54,7 @@ public class CustomerService {
 	// Update a Customer
 	public boolean update(Integer id, Customers customer) throws Exception {
 
-		Customers c = (Customers) em.createNamedQuery("Customers.findById").setParameter("id", id).getSingleResult();
-
-		if (c == null) {
-			throw new Exception("No Records found with that Id");
-		}
-
+		Customers c = findCustomerById(id);
 		EntityTransaction tx = null;
 		try {
 			tx = em.getTransaction();
@@ -89,12 +75,7 @@ public class CustomerService {
 
 	// Delete a Customer
 	public boolean delete(Integer id) throws Exception {
-		Customers c = (Customers) em.createNamedQuery("Customers.findById").setParameter("id", id).getSingleResult();
-
-		if (c == null) {
-			throw new Exception("No Records found with that Id");
-		}
-
+		Customers c = findCustomerById(id);
 		EntityTransaction tx = null;
 		try {
 			tx = em.getTransaction();
@@ -102,12 +83,25 @@ public class CustomerService {
 			em.remove(c);
 			tx.commit();
 		} catch (Exception e) {
-			tx.rollback();
+			if (tx != null && tx.isActive())
+				tx.rollback();
 			return false;
 		} finally {
 			tx = null;
+			em.close();
 		}
 		return true;
+	}
+	
+	public Customers findCustomerById(Integer id) throws NotFoundException, Exception {
+		Customers c;
+		try {
+			c = (Customers) em.createNamedQuery("Customers.findById").setParameter("customerId", id).getSingleResult();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new NotFoundException("record not found");
+		}
+		return c;
 	}
 
 }
