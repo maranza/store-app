@@ -12,7 +12,7 @@ import com.coresystems.utils.ServletUtil;
 /**
  * Servlet implementation class ErrorServlet
  */
-@WebServlet("/ErrorServlet")
+@WebServlet("/Error")
 public class ErrorServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
