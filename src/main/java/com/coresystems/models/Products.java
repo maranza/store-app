@@ -23,6 +23,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import com.google.gson.annotations.Expose;
 
 /**
@@ -30,6 +32,7 @@ import com.google.gson.annotations.Expose;
  * @author Oratile
  */
 @Entity
+@DynamicUpdate
 @Table(name = "products")
 @NamedQueries(
 {
@@ -44,6 +47,7 @@ public class Products implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
+    @Expose
     private Integer productId;
     @Expose
     @Basic(optional = false)
@@ -69,10 +73,11 @@ public class Products implements Serializable {
         this.productId = productId;
     }
 
-    public Products(Integer productId, String productName)
+    public Products(Integer productId, String productName, Double productAmount)
     {
         this.productId = productId;
         this.productName = productName;
+        this.amount = productAmount;
     }
 
     public Products(String product_name, Double amount2) {
