@@ -20,6 +20,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 import com.google.gson.annotations.Expose;
 
 /**
@@ -38,6 +41,8 @@ import com.google.gson.annotations.Expose;
     , @NamedQuery(name = "Customers.findByUsername", query = "SELECT c FROM Customers c WHERE c.username = :username")
     , @NamedQuery(name = "Customers.findByBalance", query = "SELECT c FROM Customers c WHERE c.balance = :balance")
 })
+@DynamicUpdate
+@DynamicInsert
 public class Customers implements Serializable {
 
     private static final long serialVersionUID = 1L;
