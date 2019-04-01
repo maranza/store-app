@@ -154,8 +154,32 @@ public class ProductServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("application/json");
+		reEstablishConnection();
+		PrintWriter out = response.getWriter();
+		Gson json = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().create();
+		JsonObject jsonObject = json.fromJson(request.getReader(), JsonObject.class);
 		
+		String product_name = jsonObject.get("product_name").getAsString();
+		Double amount = jsonObject.get("amount").getAsDouble();
+		
+		String strId = request.getParameter("id");
+		try {
+
+			if (strId != null) {
+				service.updateProduct(Integer.parseInt(strId), new Products(product_name, amount));
+				ServletUtil.sendResponse("record updated", response);
+			} else {
+				ServletUtil.sendResponse("Failed to update the record", response);
+			}
+		} catch (NotFoundException e) {
+			ServletUtil.sendError(e.getMessage(), response, HttpServletResponse.SC_NOT_FOUND);
+		} catch (Exception e) {
+			ServletUtil.sendError("something went wrong", response, HttpServletResponse.SC_BAD_REQUEST);
+			logger.info(e.getMessage());
+			e.printStackTrace();
+		}
 	}
 
 	private void reEstablishConnection() {
