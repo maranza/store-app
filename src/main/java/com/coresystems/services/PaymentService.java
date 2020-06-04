@@ -71,7 +71,7 @@ public class PaymentService {
 		try {
 			tx.begin();
 			p.setAmount(payments.getAmount());
-			p.setCustomerId(payments.getCustomerId());
+			p.setCustomer(payments.getCustomer());
 			p.setP(payments.getP());
 			tx.commit();
 		} catch (Exception e) {

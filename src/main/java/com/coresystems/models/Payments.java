@@ -27,6 +27,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.gson.annotations.Expose;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  *
  * @author Oratile
@@ -40,6 +45,9 @@ import com.google.gson.annotations.Expose;
     , @NamedQuery(name = "Payments.findById", query = "SELECT p FROM Payments p WHERE p.id = :id")
     , @NamedQuery(name = "Payments.findByAmount", query = "SELECT p FROM Payments p WHERE p.amount = :amount")
 })
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class Payments implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -64,59 +72,6 @@ public class Payments implements Serializable {
     @Expose
     @ManyToMany
     private List<Products> p = new ArrayList<>();
-
-    public List<Products> getP() {
-		return p;
-	}
-
-	public void setP(List<Products> p) {
-		this.p = p;
-	}
-
-	public Payments()
-    {
-    }
-
-    public Payments(Integer id)
-    {
-        this.id = id;
-    }
-
-    public Payments(Integer id, int amount)
-    {
-        this.id = id;
-        this.amount = amount;
-    }
-
-    public Integer getId()
-    {
-        return id;
-    }
-
-    public void setId(Integer id)
-    {
-        this.id = id;
-    }
-
-    public int getAmount()
-    {
-        return amount;
-    }
-
-    public void setAmount(int amount)
-    {
-        this.amount = amount;
-    }
-
-    public Customers getCustomerId()
-    {
-        return customer;
-    }
-
-    public void setCustomerId(Customers customerId)
-    {
-        this.customer = customerId;
-    }
 
     @Override
     public int hashCode()

@@ -20,6 +20,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -29,6 +33,10 @@ import com.google.gson.annotations.Expose;
  *
  * @author Oratile
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 @Entity
 @Table(name = "customers")
 @XmlRootElement
@@ -75,11 +83,6 @@ public class Customers implements Serializable {
     private String username;
     @Column(name = "balance")
     private Integer balance;
-    
-
-    public Customers()
-    {
-    }
 
     public Customers(Integer id)
     {
@@ -92,56 +95,6 @@ public class Customers implements Serializable {
         this.name = name;
         this.address = address;
         this.username = username;
-    }
-
-    public Integer getId()
-    {
-        return id;
-    }
-
-    public void setId(Integer id)
-    {
-        this.id = id;
-    }
-
-    public String getName()
-    {
-        return name;
-    }
-
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
-    public String getAddress()
-    {
-        return address;
-    }
-
-    public void setAddress(String address)
-    {
-        this.address = address;
-    }
-
-    public String getUsername()
-    {
-        return username;
-    }
-
-    public void setUsername(String username)
-    {
-        this.username = username;
-    }
-
-    public Integer getBalance()
-    {
-        return balance;
-    }
-
-    public void setBalance(Integer balance)
-    {
-        this.balance = balance;
     }
 
 
@@ -167,12 +120,6 @@ public class Customers implements Serializable {
             return false;
         }
         return true;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "com.coresystems.models.Customers[ id=" + id + " ]";
     }
 
 }

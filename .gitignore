@@ -7,3 +7,6 @@ src/main/resources/META-INF/.LCKpersistence.xml~
 .factorypath
 .idea/
 store-app.iml
+/bin/
+/.apt_generated/
+/.apt_generated_tests/

@@ -2,8 +2,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<title>Home</title>
+<meta charset="UTF-8">
+<title>Home</title>
 </head>
 <body>
 	<h1>Hello World!</h1>

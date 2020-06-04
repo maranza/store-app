@@ -103,7 +103,7 @@ public class PaymentServlet extends HttpServlet {
 				p.add( new Products((Integer)id.getAsInt()));
 			});
 			
-			payment.setCustomerId(new Customers(customer_id));			
+			payment.setCustomer(new Customers(customer_id));			
 			payment.setAmount(amount);
 			payment.setP(p);
 
