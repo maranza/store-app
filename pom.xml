@@ -18,7 +18,7 @@
 		<!-- <tomcat-version>8.5.32</tomcat-version> -->
 		<tomcat-version>9.0.34</tomcat-version>
 		<hibernate-version>5.4.24.Final</hibernate-version>
-		<postgresql-version>9.4-1200-jdbc41</postgresql-version>
+		<postgresql-version>42.3.7</postgresql-version>
 		<gson-version>2.8.9</gson-version>
 		<java-version>8</java-version>
 	</properties>
